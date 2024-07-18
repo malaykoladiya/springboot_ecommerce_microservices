@@ -9,5 +9,4 @@ public class EcommerceApiGatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApiGatewayApplication.class, args);
 	}
-
 }
