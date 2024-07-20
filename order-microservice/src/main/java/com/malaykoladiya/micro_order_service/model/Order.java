@@ -1,5 +1,7 @@
 package com.malaykoladiya.micro_order_service.model;
 
+import com.malaykoladiya.micro_order_service.dto.OrderRequest;
+import io.swagger.v3.oas.annotations.info.Contact;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
