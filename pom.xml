@@ -20,6 +20,7 @@
         <module>order-microservice</module>
         <module>inventory-microservice</module>
         <module>ecommerce-api-gateway</module>
+        <module>notification-microservice</module>
     </modules>
 
     <properties>
