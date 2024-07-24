@@ -43,5 +43,5 @@ build/
 ### Data files
 /docker/mongodb/data/
 /docker/mysql/data/
-/docker/
 /.idea/
+/docker/tempo/tempo-data/
