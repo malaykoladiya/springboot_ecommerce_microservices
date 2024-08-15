@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.malaykoladiya</groupId>
+    <artifactId>springboot-ecommerce-microservices</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>springboot-ecommerce-microservices</name>
+    <modules>
+    <module>ecommerce-api-gateway</module>
+    <module>product-service</module>
+    <module>order-service</module>
+    <module>inventory-service</module>
+    <module>notification-service</module>
+  </modules>
+
+
+    <description>Spring Boot MicroService</description>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+    <properties>
+        <java.version>21</java.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+<!--        <jacocoArgLine>${project.build.directory}/jacoco-unit.exec</jacocoArgLine> &lt;!&ndash; Define the JaCoCo property &ndash;&gt;-->
+
+    </properties>
+
+
+    <build>
+
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+
+
+            <!-- JaCoCo Maven Plugin for Unit and Integration Tests -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Prepare agent for unit tests -->
+                    <execution>
+                        <id>prepare-agent-unit</id>
+                        <phase>initialize</phase> <!-- or 'validate' -->
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-unit.exec</destFile>
+                            <output>file</output>
+                            <propertyName>jacocoUnitArgLine</propertyName> <!-- Set the property name -->
+                        </configuration>
+                    </execution>
+                    <!-- Generate report for unit tests -->
+                    <execution>
+                        <id>report-unit</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-unit.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Prepare agent for integration tests -->
+                    <execution>
+                        <id>prepare-agent-integration</id>
+                        <phase>initialize</phase> <!-- or 'validate' -->
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-integration.exec</destFile>
+                            <output>file</output>
+                            <propertyName>jacocoIntegrationArgLine</propertyName> <!-- Set the property name -->
+                        </configuration>
+                    </execution>
+                    <!-- Generate report for integration tests -->
+                    <execution>
+                        <id>report-integration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-integration.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-integration</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Surefire Plugin for Unit Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <argLine>@{jacocoUnitArgLine}</argLine> <!-- Include the JaCoCo argLine and preserve existing ones -->
+                    <includes>
+                        <include>**/*UnitTest.java</include>
+                    </includes>
+                    <!-- Other configurations... -->
+                </configuration>
+            </plugin>
+
+            <!-- Failsafe Plugin for Integration Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <argLine>@{jacocoIntegrationArgLine} </argLine> <!-- Include the JaCoCo argLine and preserve existing ones -->
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <!-- Other configurations... -->
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+
+    <profiles>
+        <!-- Profile for Unit Tests -->
+        <profile>
+            <id>unit-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+
+                        <configuration>
+
+                            <includes>
+                                <include>**/*UnitTest.java</include>
+                            </includes>
+                            <parallel>classesAndMethods</parallel>
+                            <threadCount>4</threadCount>
+                            <reuseForks>true</reuseForks>
+                            <forkCount>2</forkCount>
+                            <systemPropertyVariables>
+                                <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+                                <spring.main.banner-mode>off</spring.main.banner-mode>
+                            </systemPropertyVariables>
+<!--                            <properties>-->
+<!--                                <property>-->
+<!--                                    <name>junit.jupiter.execution.parallel.enabled</name>-->
+<!--                                    <value>true</value>-->
+<!--                                </property>-->
+<!--                            </properties>-->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Profile for Integration Tests -->
+        <profile>
+            <id>integration-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                                <include>**/*Tests.java</include>
+                            </includes>
+                            <parallel>classesAndMethods</parallel>
+                            <threadCount>4</threadCount>
+                            <reuseForks>true</reuseForks>
+                            <forkCount>2</forkCount>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+</project>

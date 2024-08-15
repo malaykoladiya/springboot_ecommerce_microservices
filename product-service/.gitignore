@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-/docker/tempo/tempo-data/
-/volume-data/
-/docker/keycloak/
