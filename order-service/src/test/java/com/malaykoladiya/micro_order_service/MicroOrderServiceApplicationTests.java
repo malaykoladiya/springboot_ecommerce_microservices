@@ -59,4 +59,29 @@ class MicroOrderServiceApplicationTests {
 		assertThat(responseBodyString, Matchers.is("Order has been placed Successfully"));
 	}
 
+	@Test
+	void shouldFailOrderWhenProductIsNotInStock() {
+		String submitOrderJson = """
+                {
+                     "skuCode": "Iphone_15",
+                     "price": 1000,
+                     "quantity": 1000,
+                     "userDetails": {
+				    	"email": "test@example.com",
+				    	"name": "Test User"
+				    	}
+                	}
+                """;
+		InventoryClientStub.stubInventoryCall("Iphone_15", 1000);
+
+		RestAssured.given()
+				.contentType("application/json")
+				.body(submitOrderJson)
+				.when()
+				.post("/api/order")
+				.then()
+				.log().all()
+				.statusCode(500);
+	}
+
 }
