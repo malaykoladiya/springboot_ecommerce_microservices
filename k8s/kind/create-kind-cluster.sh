@@ -1,0 +1,1 @@
+kind create cluster --name ecommercemicroservices --config kind-config.yaml
